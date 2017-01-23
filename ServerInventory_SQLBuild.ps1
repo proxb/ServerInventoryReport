@@ -1,4 +1,12 @@
-﻿#region Helper Functions
+﻿[cmdletbinding(
+)]
+Param (
+        [string]$Computername = 'vsql',
+        
+        [parameter()]
+        [string]$Database = 'Master'       
+)
+#region Helper Functions
 Function Invoke-SQLCmd {    
     [cmdletbinding(
         DefaultParameterSetName = 'NoCred',
@@ -7,7 +15,7 @@ Function Invoke-SQLCmd {
     )]
     Param (
         [parameter()]
-        [string]$Computername = 'S46',
+        [string]$Computername = 'vsql',
         
         [parameter()]
         [string]$Database = 'Master',    
