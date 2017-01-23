@@ -7,7 +7,7 @@ Function Invoke-SQLCmd {
     )]
     Param (
         [parameter()]
-        [string]$Computername = 'vSQL',
+        [string]$Computername = 'S46',
         
         [parameter()]
         [string]$Database = 'Master',    
@@ -98,7 +98,7 @@ Function Invoke-SQLCmd {
 
 #region Check/Create for database
 $Database = 'ServerInventory'
-$Computername = 'vSQL'
+$Computername = 'vsql'
 $SQLParams = @{
     Computername = $Computername
     Database = 'Master'
@@ -504,4 +504,44 @@ If ($Results.Name -eq $Null) {
 }
 #endregion ScheduledTasks Table
 
+#region Services Table
+$Table = 'tbServices'
+$SQLParams.CommandType = 'Query'
+$SQLParams.SQLParameter = @{
+    '@TableName' = $Table
+}
+$SQLParams.Database = 'ServerInventory'    
+$SQLParams.TSQL = "SELECT TABLE_NAME AS Name FROM information_schema.tables WHERE TABLE_NAME = @TableName"
+$Results = Invoke-SQLCmd @SQLParams
+If ($Results.Name -eq $Null) {
+    #Create the table
+    $SQLParams.Remove('SQLParameter')
+    $SQLParams.CommandType='NonQuery'
+    $SQLParams.TSQL = "CREATE TABLE $Table  (        
+        ComputerName nvarchar (256), 
+        Name nvarchar (256),
+        DisplayName nvarchar (256),
+        Description nvarchar (256),
+        IsDelayedAutoStart bit,
+        SIDType nvarchar (256),
+        Privileges nvarchar (500),
+        ShutDownTimeout int,
+        Type nvarchar (MAX),
+        State nvarchar (256),
+        Controls nvarchar (256),
+        Win32ExitCode int,
+        ServiceExitCode int,
+        ProcessID int,
+        ServiceFlags nvarchar (256),
+        StartMode nvarchar (256),
+        ErrorControl nvarchar (256),
+        FilePath nvarchar (256),
+        LoadOrderGroup nvarchar (256),
+        Dependancies nvarchar (256),
+        StartName nvarchar (256),
+        InventoryDate datetime
+    )"
+    Invoke-SQLCmd @SQLParams
+}
+#endregion #region Services Table
 #endregion Create Tables
