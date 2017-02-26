@@ -8,7 +8,7 @@ A set of scripts to create an inventory report using PowerShell, SQL and WPF
 * Necessary rights to run a scheduled task for data gathering
 * [PoshRSJob](https://github.com/proxb/PoshRSJob) module to assist with data gathering
 
-## Using the Server Inventory scripts
+## Using the Server Inventory scripts (work in progress)
 1. Either on the SQL server or on a system that has access to the SQL server where the database and tables will reside on, run the [ServerInventory_SQLBuild.ps1](https://github.com/proxb/ServerInventoryReport/blob/master/ServerInventory_SQLBuild.ps1) script, ensuring that you have updated the SQL database location (Computername parameter on line 4).
 
 2. You will need to provide the account that is being used in the scheduled task the necessary rights to be able to write to the ServerInventory database that is created.
