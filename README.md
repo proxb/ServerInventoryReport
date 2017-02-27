@@ -20,3 +20,6 @@ A set of scripts to create an inventory report using PowerShell, SQL and WPF
 4. Once you are sure that everything looks good, you can create a scheduled task to run this script nightly or whenever you feel is appropriate.
 
 5. Ensure that [ServerInventoryUI.ps1](https://github.com/proxb/ServerInventoryReport/blob/master/ServerInventoryUI.ps1) has been updated to point to your SQL server and also make sure that you have allowed the users that will be using the UI has read access to the database to allow the UI to populate the datatables correctly.
+
+## Using the Server Inventory UI (work in progress)
+* 
