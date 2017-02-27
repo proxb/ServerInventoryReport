@@ -1,6 +1,8 @@
 # ServerInventoryReport
 A set of scripts to create an inventory report using PowerShell, SQL and WPF
 
+![alt tag](https://github.com/proxb/ServerInventoryReport/blob/master/Images/ServerInventoryUI.png)
+
 ## Requirements for use
 * SQL Server
 * PowerShell V3
