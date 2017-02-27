@@ -1,3 +1,7 @@
+Param (
+    [parameter()]
+    $SQLServer = 'vSQL'
+)
 #region Helper Functions
 function Out-DataTable {
     [CmdletBinding()]
@@ -685,7 +689,6 @@ Function Get-ScheduledTask {
 
 #region Data Gathering
 $InventoryDate = Get-Date
-$SQLServer = 'D15'
 $ServerGroup = 'MemberServer'
 
 Get-Server -MemberServer | Start-RSJob -Name {$_} -FunctionsToLoad Get-ScheduledTask, Invoke-SQLCmd,Get-LocalGroup,Get-LocalUser,Get-SecurityUpdate,
