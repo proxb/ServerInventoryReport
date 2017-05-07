@@ -11,6 +11,8 @@
         Name: ServerInventory.ps1
         Author: Boe Prox
         Version History:
+            1.2.3.0 //Boe Prox - 07 May 2017
+                - Fixed bug where Excel report only worked with up to 28 columns
             1.2.2.0 //Boe Prox - 5 May 2016
                 - Added more keyboard shortcuts: Display Help (F1), Apply Filter (F5), Clear Filter (F8), Create Excel Report (CTRL+R)
                 - Added help window for keyboard shortcuts and filter definitions
@@ -52,19 +54,30 @@ $PowerShell.Runspace = $RunSpace
     #endregion Load Assemblies
 
     #region User Defined Variables
-    $SQLServer = 'vSQL'
+    $SQLServer = 'd15'
     ## Update Tables to include to new tables added to SQL so UI controls will be auto generated at runtime
-    $Script:Tables = 'tbGeneral','tbOperatingSystem','tbMemory','tbProcessor','tbUsers','tbGroups',
-    'tbDrives','tbAdminShare','tbUserShare','tbServerRoles','tbSoftware','tbScheduledTasks','tbUpdates'
+    $Script:Tables = 'tbGeneral','tbOperatingSystem', 'tbNetwork','tbMemory','tbProcessor','tbUsers','tbGroups',
+    'tbDrives','tbAdminShare','tbUserShare','tbServerRoles','tbSoftware','tbScheduledTasks','tbUpdates','tbServices'
     #endregion User Defined Variables
 
     #region Variables
     $Script:ExcelReports = New-Object System.Collections.ArrayList
     $ExcludeProperties = 'DataView','RowVersion','Row','IsNew','IsEdit','Error'
+    $_Number = 0
+    $Previous = 0
     $Script:Letters = [hashtable]::Synchronized(@{})
     $Range = 97..122
-    For ($i=1;$i -le $Range.count; $i++) {
-        $Script:Letters[$i] = [char]($Range[$i-1])
+    For ($n=0;$n -le 5; $n++) {
+        For ($i=1;$i -le $Range.count; $i++) {
+            $_Number = $Previous + $i
+            If ($n -ne 0) {
+                $Script:Letters[$_Number] = "$([char]($Range[$n-1]))$([char]($Range[$i-1]))"
+            }
+            Else {
+                $Script:Letters[$_Number] = [char]($Range[$i-1])
+            }            
+        }
+        $Previous = $_number
     }
     $Script:UIHash = [hashtable]::Synchronized(@{Host=$Host})
     $Script:TempFilters = [hashtable]::Synchronized(@{})
@@ -467,7 +480,7 @@ $PowerShell.Runspace = $RunSpace
         )]
         Param (
             [parameter()]
-            [string]$Computername = 'vSQL',
+            [string]$Computername = 'S46',
         
             [parameter()]
             [string]$Database = 'Master',    
@@ -629,8 +642,12 @@ $PowerShell.Runspace = $RunSpace
             <Menu x:Name="menu" Height="20" Grid.Row="0">
             <Menu.Background>
                 <LinearGradientBrush StartPoint='0,0' EndPoint='0,1'>
-                    <LinearGradientBrush.GradientStops> <GradientStop Color='#C4CBD8' Offset='0' /> <GradientStop Color='#E6EAF5' Offset='0.2' /> 
-                    <GradientStop Color='#CFD7E2' Offset='0.9' /> <GradientStop Color='#C4CBD8' Offset='1' /> </LinearGradientBrush.GradientStops>
+                    <LinearGradientBrush.GradientStops> 
+                        <GradientStop Color='#C4CBD8' Offset='0' /> 
+                        <GradientStop Color='#E6EAF5' Offset='0.2' /> 
+                        <GradientStop Color='#CFD7E2' Offset='0.9' /> 
+                        <GradientStop Color='#C4CBD8' Offset='1' /> 
+                    </LinearGradientBrush.GradientStops>
                 </LinearGradientBrush>
             </Menu.Background> 
                 <MenuItem Header="File">
@@ -1341,6 +1358,6 @@ $PowerShell.Runspace = $RunSpace
 
     #region Display the Window
     Write-Verbose "Displaying the Window"
-    [void]$uiHash.window.ShowDialog()
+    [void]$uiHash.window.Dispatcher.InvokeAsync{$uiHash.window.ShowDialog()}.Wait()
     #endregion Display the Window
 }).BeginInvoke()
