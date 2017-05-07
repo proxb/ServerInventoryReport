@@ -54,7 +54,7 @@ $PowerShell.Runspace = $RunSpace
     #endregion Load Assemblies
 
     #region User Defined Variables
-    $SQLServer = 'd15'
+    $SQLServer = 'vsql'
     ## Update Tables to include to new tables added to SQL so UI controls will be auto generated at runtime
     $Script:Tables = 'tbGeneral','tbOperatingSystem', 'tbNetwork','tbMemory','tbProcessor','tbUsers','tbGroups',
     'tbDrives','tbAdminShare','tbUserShare','tbServerRoles','tbSoftware','tbScheduledTasks','tbUpdates','tbServices'
